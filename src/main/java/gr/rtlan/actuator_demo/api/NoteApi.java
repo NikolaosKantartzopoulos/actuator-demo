@@ -1,16 +1,16 @@
 package gr.rtlan.actuator_demo.api;
 
-import java.util.ArrayList;
-
-import jakarta.validation.Valid;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import gr.rtlan.actuator_demo.dto.NoteRequestDto;
 import gr.rtlan.actuator_demo.dto.NoteResponseDto;
 import gr.rtlan.actuator_demo.service.NoteService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 
 @RestController()
 @RequestMapping("/api/note")
@@ -35,6 +39,8 @@ public class NoteApi {
     }
 
     @PostMapping()
+    @ApiResponse(responseCode = "201", description = "Create a note",
+        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = NoteResponseDto.class)))
     // @PreAuthorize("hasRole(T(gr.rtlan.actuator_demo.auth.Permissions).ROLE_USER)")
     public ResponseEntity<NoteResponseDto> createNote(@RequestBody @Valid NoteRequestDto noteRequestDto) {
         logger.info("Creating note");
@@ -42,11 +48,19 @@ public class NoteApi {
         return ResponseEntity.status(HttpStatus.CREATED).body(noteResponseDto);
     }
 
+    @ApiResponse(responseCode = "200", description = "Get all notes")
     @GetMapping()
-    public ArrayList<NoteResponseDto> getAllNotes() {
+    public List<NoteResponseDto> getAllNotes() {
         logger.info("getAllNotes");
-        ArrayList<NoteResponseDto> notes = noteService.getNotes();
+        List<NoteResponseDto> notes = noteService.getNotes();
         return notes;
+    }
+
+    @ApiResponse(responseCode = "200", description = "Delete a note")
+    @DeleteMapping("{id}")
+    public void deleteNote(@PathVariable("id") String id) {
+        logger.info("Deleting note with id {}", id);
+        noteService.deleteNote(id);
     }
 
 }

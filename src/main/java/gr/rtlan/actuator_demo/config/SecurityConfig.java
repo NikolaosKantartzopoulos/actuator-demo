@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Profile("!dev")
 public class SecurityConfig {
 
-    private static final String NOTE_ENDPOINTS = "/api/note";
+    private static final String NOTE_ENDPOINTS = "/api/note/**";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,6 +28,7 @@ public class SecurityConfig {
                 auth.requestMatchers("/actuator/**").permitAll();
                 auth.requestMatchers(HttpMethod.GET, NOTE_ENDPOINTS).permitAll();
                 auth.requestMatchers(HttpMethod.POST, NOTE_ENDPOINTS).permitAll();
+                auth.requestMatchers(HttpMethod.DELETE, NOTE_ENDPOINTS).permitAll();
                 auth.anyRequest().authenticated();
             });
         return http.build();

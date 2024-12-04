@@ -1,6 +1,7 @@
 package gr.rtlan.actuator_demo.service;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -20,11 +21,9 @@ public class NoteService {
     Logger logger = LoggerFactory.getLogger(NoteService.class);
 
     private final NoteRepository noteRepository;
-    private final ConversionService conversionService;
 
-    public NoteService(NoteRepository noteRepository, ConversionService conversionService, ModelMapper modelMapper) {
+    public NoteService(NoteRepository noteRepository, ModelMapper modelMapper) {
         this.noteRepository = noteRepository;
-        this.conversionService = conversionService;
         this.modelMapper = modelMapper;
     }
 
@@ -36,6 +35,14 @@ public class NoteService {
 
     public ArrayList<NoteResponseDto> getNotes() {
         logger.info("Note Service: Get all notes");
-        return new ArrayList<NoteResponseDto>();
+        ArrayList<Note> notes = (ArrayList<Note>) noteRepository.findAll();
+        return notes.stream()
+            .map(note -> modelMapper.map(note, NoteResponseDto.class))
+            .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public void deleteNote(String id) {
+        logger.info("Note Service: Delete a note with id {}", id);
+        noteRepository.deleteById(Long.parseLong(id));
     }
 }
