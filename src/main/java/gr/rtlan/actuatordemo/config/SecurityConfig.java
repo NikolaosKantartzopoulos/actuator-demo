@@ -31,8 +31,9 @@ public class SecurityConfig {
                 auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                 auth.requestMatchers("/actuator/**").permitAll();
                 auth.requestMatchers(NOTE_ENDPOINTS).permitAll();
+                auth.requestMatchers("/api/**").permitAll();
                 auth.requestMatchers(SWAGGER_ENDPOINTS).permitAll();
-                auth.anyRequest().authenticated();
+                auth.anyRequest().permitAll();
             });
         return http.build();
     }
