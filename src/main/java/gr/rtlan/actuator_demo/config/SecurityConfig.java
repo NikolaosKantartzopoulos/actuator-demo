@@ -1,6 +1,5 @@
 package gr.rtlan.actuator_demo.config;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -18,17 +17,21 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private static final String NOTE_ENDPOINTS = "/api/note/**";
+    private static final String[] SWAGGER_ENDPOINTS = {
+        "/swagger-ui/**",
+        "/v3/**"
+    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .cors(AbstractHttpConfigurer::disable)
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> {
-                auth.requestMatchers(HttpMethod.OPTIONS).permitAll();
+                auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                 auth.requestMatchers("/actuator/**").permitAll();
-                auth.requestMatchers(HttpMethod.GET, NOTE_ENDPOINTS).permitAll();
-                auth.requestMatchers(HttpMethod.POST, NOTE_ENDPOINTS).permitAll();
-                auth.requestMatchers(HttpMethod.DELETE, NOTE_ENDPOINTS).permitAll();
+                auth.requestMatchers(NOTE_ENDPOINTS).permitAll();
+                auth.requestMatchers(SWAGGER_ENDPOINTS).permitAll();
                 auth.anyRequest().authenticated();
             });
         return http.build();
