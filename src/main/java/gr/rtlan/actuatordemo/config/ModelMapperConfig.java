@@ -1,4 +1,4 @@
-package gr.rtlan.actuator_demo.config;
+package gr.rtlan.actuatordemo.config;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;

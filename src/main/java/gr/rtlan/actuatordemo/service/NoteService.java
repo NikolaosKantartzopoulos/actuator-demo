@@ -1,4 +1,4 @@
-package gr.rtlan.actuator_demo.service;
+package gr.rtlan.actuatordemo.service;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -6,13 +6,12 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
-import gr.rtlan.actuator_demo.domain.Note;
-import gr.rtlan.actuator_demo.dto.NoteRequestDto;
-import gr.rtlan.actuator_demo.dto.NoteResponseDto;
-import gr.rtlan.actuator_demo.repository.NoteRepository;
+import gr.rtlan.actuatordemo.domain.Note;
+import gr.rtlan.actuatordemo.dto.NoteRequestDto;
+import gr.rtlan.actuatordemo.dto.NoteResponseDto;
+import gr.rtlan.actuatordemo.repository.NoteRepository;
 
 @Service
 public class NoteService {

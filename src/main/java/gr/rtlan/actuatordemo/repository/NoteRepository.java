@@ -1,8 +1,8 @@
-package gr.rtlan.actuator_demo.repository;
+package gr.rtlan.actuatordemo.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import gr.rtlan.actuator_demo.domain.Note;
+import gr.rtlan.actuatordemo.domain.Note;
 
 
 public interface NoteRepository extends CrudRepository<Note, Long> {

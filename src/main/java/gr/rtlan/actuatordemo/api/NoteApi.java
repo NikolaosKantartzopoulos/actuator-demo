@@ -1,4 +1,4 @@
-package gr.rtlan.actuator_demo.api;
+package gr.rtlan.actuatordemo.api;
 
 import java.util.List;
 
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import gr.rtlan.actuator_demo.dto.NoteRequestDto;
-import gr.rtlan.actuator_demo.dto.NoteResponseDto;
-import gr.rtlan.actuator_demo.service.NoteService;
+import gr.rtlan.actuatordemo.dto.NoteRequestDto;
+import gr.rtlan.actuatordemo.dto.NoteResponseDto;
+import gr.rtlan.actuatordemo.service.NoteService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+
+    <!-- This is the only class that should implement the ResponseEntityExceptionHandler interface -->
+    <suppress checks="IllegalImport" files="com/awls/rgs/nexus/commons/exceptions/AwlsResponseEntityExceptionHandler.java"/>
+    <!-- Aspect should let all exceptions propagate as is so they can be handled by the corresponding ExceptionHandlers -->
+    <suppress checks="IllegalThrow" files="com/awls/rgs/nexus/wallet/audit/AuditingAspect.java"/>
+
+    <!-- TODO finally address them -->
+    <suppress checks="TodoComment" files="com.awls.rgs.nexus.synot.service.SynotPamService"/>
+    <suppress checks="TodoComment" files="com.awls.rgs.nexus.synot.converter.RefundRequestDtoConverter"/>
+
+</suppressions>

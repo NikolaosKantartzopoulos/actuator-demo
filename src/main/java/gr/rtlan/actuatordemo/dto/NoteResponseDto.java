@@ -1,6 +1,4 @@
-package gr.rtlan.actuator_demo.dto;
-
-import jakarta.validation.constraints.NotBlank;
+package gr.rtlan.actuatordemo.dto;
 
 import lombok.Data;
 

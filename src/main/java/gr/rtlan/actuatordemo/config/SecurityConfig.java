@@ -1,4 +1,4 @@
-package gr.rtlan.actuator_demo.config;
+package gr.rtlan.actuatordemo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ public class SecurityConfig {
     private static final String NOTE_ENDPOINTS = "/api/note/**";
     private static final String[] SWAGGER_ENDPOINTS = {
         "/swagger-ui/**",
-        "/v3/**"
+        "/v3/**",
     };
 
     @Bean

@@ -1,4 +1,4 @@
-package gr.rtlan.actuator_demo;
+package gr.rtlan.actuatordemo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,7 +8,6 @@ public class ActuatorDemoApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ActuatorDemoApplication.class, args);
-
     }
 
 }
