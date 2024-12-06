@@ -19,48 +19,69 @@ import org.springframework.web.bind.annotation.RestController;
 import gr.rtlan.actuatordemo.dto.NoteRequestDto;
 import gr.rtlan.actuatordemo.dto.NoteResponseDto;
 import gr.rtlan.actuatordemo.service.NoteService;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
-@RestController()
+@RestController
 @RequestMapping("/api/note")
 public class NoteApi {
 
-    Logger logger = LoggerFactory.getLogger(NoteApi.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NoteApi.class);
 
-    NoteService noteService;
-    ConversionService conversionService;
+    private final NoteService noteService;
+    private final ConversionService conversionService;
 
-    public NoteApi(NoteService noteService, ConversionService conversionService) {
+    private final Counter getAllNotesCounter;
+    private final Counter createNoteCounter;
+    private final Counter deleteNoteCounter;
+
+    public NoteApi(NoteService noteService, ConversionService conversionService, MeterRegistry meterRegistry) {
         this.noteService = noteService;
         this.conversionService = conversionService;
+
+        this.getAllNotesCounter = Counter.builder("api_note_get")
+            .tag("title", "all")
+            .description("Get all notes description")
+            .register(meterRegistry);
+
+        this.createNoteCounter = Counter.builder("api_note_create")
+            .tag("title", "create")
+            .description("Create a new note")
+            .register(meterRegistry);
+
+        this.deleteNoteCounter = Counter.builder("api_note_delete")
+            .tag("title", "delete")
+            .description("Delete a note")
+            .register(meterRegistry);
     }
 
-    @PostMapping()
+    @PostMapping
     @ApiResponse(responseCode = "201", description = "Create a note",
         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = NoteResponseDto.class)))
-    // @PreAuthorize("hasRole(T(gr.rtlan.actuator_demo.auth.Permissions).ROLE_USER)")
     public ResponseEntity<NoteResponseDto> createNote(@RequestBody @Valid NoteRequestDto noteRequestDto) {
-        logger.info("Creating note");
+        LOGGER.info("Creating note");
+        createNoteCounter.increment();
         NoteResponseDto noteResponseDto = noteService.addNote(noteRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(noteResponseDto);
     }
 
+    @GetMapping
     @ApiResponse(responseCode = "200", description = "Get all notes")
-    @GetMapping()
     public List<NoteResponseDto> getAllNotes() {
-        logger.info("getAllNotes");
-        List<NoteResponseDto> notes = noteService.getNotes();
-        return notes;
+        LOGGER.info("getAllNotes");
+        getAllNotesCounter.increment();
+        return noteService.getNotes();
     }
 
-    @ApiResponse(responseCode = "200", description = "Delete a note")
     @DeleteMapping("{id}")
+    @ApiResponse(responseCode = "200", description = "Delete a note")
     public void deleteNote(@PathVariable("id") String id) {
-        logger.info("Deleting note with id {}", id);
+        LOGGER.info("Deleting note with id {}", id);
+        deleteNoteCounter.increment();
         noteService.deleteNote(id);
     }
-
 }
