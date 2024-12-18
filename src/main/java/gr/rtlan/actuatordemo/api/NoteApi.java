@@ -92,4 +92,11 @@ public class NoteApi {
         deleteNoteCounter.increment();
         noteService.deleteNote(id);
     }
+
+    @DeleteMapping("many/{limit}")
+    @ApiResponse(responseCode = "200", description = "Deleted the x oldest notes")
+    public void deleteOldestNotes(@PathVariable Integer limit) {
+        LOGGER.info("Deleting oldest notes");
+        noteService.deleteOldestNotes(limit);
+    }
 }
