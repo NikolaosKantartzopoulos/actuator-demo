@@ -38,6 +38,7 @@ public class NoteApi {
     private final Counter getAllNotesCounter;
     private final Counter createNoteCounter;
     private final Counter deleteNoteCounter;
+    private final Counter notDeletingCounter;
 
     public NoteApi(NoteService noteService, ConversionService conversionService, MeterRegistry meterRegistry) {
         this.noteService = noteService;
@@ -57,6 +58,11 @@ public class NoteApi {
             .tag("title", "delete")
             .description("Delete a note")
             .register(meterRegistry);
+
+        this.notDeletingCounter = Counter.builder("api_note_no_delete")
+            .tag("title", "no-delete")
+            .description("Create or Get")
+            .register(meterRegistry);
     }
 
     @PostMapping
@@ -65,6 +71,7 @@ public class NoteApi {
     public ResponseEntity<NoteResponseDto> createNote(@RequestBody @Valid NoteRequestDto noteRequestDto) {
         LOGGER.info("Creating note");
         createNoteCounter.increment();
+        notDeletingCounter.increment();
         NoteResponseDto noteResponseDto = noteService.addNote(noteRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(noteResponseDto);
     }
@@ -74,6 +81,7 @@ public class NoteApi {
     public List<NoteResponseDto> getAllNotes() {
         LOGGER.info("getAllNotes");
         getAllNotesCounter.increment();
+        notDeletingCounter.increment();
         return noteService.getNotes();
     }
 
