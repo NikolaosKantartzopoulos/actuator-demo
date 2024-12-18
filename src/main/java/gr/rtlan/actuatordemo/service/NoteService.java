@@ -1,5 +1,9 @@
 package gr.rtlan.actuatordemo.service;
 
+import java.time.Clock;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -17,17 +21,25 @@ import gr.rtlan.actuatordemo.repository.NoteRepository;
 public class NoteService {
 
     private final ModelMapper modelMapper;
+    private final Clock clock;
     Logger logger = LoggerFactory.getLogger(NoteService.class);
 
     private final NoteRepository noteRepository;
 
-    public NoteService(NoteRepository noteRepository, ModelMapper modelMapper) {
+    public NoteService(NoteRepository noteRepository, ModelMapper modelMapper, Clock clock) {
         this.noteRepository = noteRepository;
         this.modelMapper = modelMapper;
+        this.clock = clock;
     }
 
     public NoteResponseDto addNote(NoteRequestDto noteRequestDto) {
         logger.info("Note Service: Create a note");
+
+        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(clock.instant(), ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy HH:mm");
+        String formattedDate = zonedDateTime.format(formatter);
+        noteRequestDto.setBody("This note was created at " + formattedDate);
+
         Note createdNote = noteRepository.save(modelMapper.map(noteRequestDto, Note.class));
         return modelMapper.map(createdNote, NoteResponseDto.class);
     }
