@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import gr.rtlan.actuatordemo.dto.NoteRequestDto;
 import gr.rtlan.actuatordemo.dto.NoteResponseDto;
 import gr.rtlan.actuatordemo.service.NoteService;
+import gr.rtlan.actuatordemo.validator.NoteBodyValidator;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,14 +35,16 @@ public class NoteApi {
     private static final Logger LOGGER = LoggerFactory.getLogger(NoteApi.class);
 
     private final NoteService noteService;
+    private final NoteBodyValidator noteBodyValidator;
 
     private final Counter getAllNotesCounter;
     private final Counter createNoteCounter;
     private final Counter deleteNoteCounter;
     private final Counter notDeletingCounter;
 
-    public NoteApi(NoteService noteService, MeterRegistry meterRegistry) {
+    public NoteApi(NoteService noteService, MeterRegistry meterRegistry, NoteBodyValidator noteBodyValidator) {
         this.noteService = noteService;
+        this.noteBodyValidator = noteBodyValidator;
 
         this.getAllNotesCounter = Counter.builder("api_note_get")
             .tag("title", "all")
@@ -60,6 +65,11 @@ public class NoteApi {
             .tag("title", "no-delete")
             .description("Create or Get")
             .register(meterRegistry);
+    }
+
+    @InitBinder("noteRequestDto")
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(noteBodyValidator);
     }
 
     @PostMapping
