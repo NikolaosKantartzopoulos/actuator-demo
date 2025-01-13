@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +32,14 @@ public class NoteApi {
     private static final Logger LOGGER = LoggerFactory.getLogger(NoteApi.class);
 
     private final NoteService noteService;
-    private final ConversionService conversionService;
 
     private final Counter getAllNotesCounter;
     private final Counter createNoteCounter;
     private final Counter deleteNoteCounter;
     private final Counter notDeletingCounter;
 
-    public NoteApi(NoteService noteService, ConversionService conversionService, MeterRegistry meterRegistry) {
+    public NoteApi(NoteService noteService, MeterRegistry meterRegistry) {
         this.noteService = noteService;
-        this.conversionService = conversionService;
 
         this.getAllNotesCounter = Counter.builder("api_note_get")
             .tag("title", "all")
